@@ -37,12 +37,7 @@ def test_dream():
     wav.write('test.wav', 11025, np.hstack(np.array(dream)))
     print('saved dream as test.wav')
 
-def reset_dream_state(dream=dream, seed=seed, cur_dream_state=cur_dream_state, dream_counter=dream_counter):
-    seed, mode      = tm.prep_seed()
-    cur_dream_state = np.zeros([tm.num_layers, 2, tm.num_unrollings, tm.seg_len])
-    dream_counter   = 0
-    dream           = []
-    print('reset dream state')
+
 
 
 def quit_gracefully(signum, frame):
@@ -154,6 +149,13 @@ else:
 seed, mode = tm.prep_seed()
 ops_to_run = [loss, output, optim, state]
 dream_ops  = [output, state]
+
+def reset_dream_state(dream=dream, seed=seed, cur_dream_state=cur_dream_state, dream_counter=dream_counter):
+    seed, mode      = tm.prep_seed()
+    cur_dream_state = np.zeros([tm.num_layers, 2, tm.num_unrollings, tm.seg_len])
+    dream_counter   = 0
+    dream           = []
+    print('reset dream state')
 
 
 for epoch in range(tm.num_epochs):
