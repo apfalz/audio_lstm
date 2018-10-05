@@ -41,6 +41,7 @@ def reset_dream_state():
     seed, mode      = tm.prep_seed()
     cur_dream_state = np.zeros([tm.num_layers, 2, tm.num_unrollings, tm.seg_len])
     dream_counter   = 0
+    dream           = []
     print('reset dream state')
 
 

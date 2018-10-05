@@ -1,4 +1,4 @@
-data = {'lr'       : 1e-4,
+data = {'lr'       : 1e-3,
 'dream_length'     : 11025 * 30,
 'num_unrollings'   : 100,
 'seg_len'          : 1024,
