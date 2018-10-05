@@ -35,9 +35,26 @@ for _ in tm.__dict__:
 
 
 
-exec(sf.quit_gracefully) #this line injects quit_gracefully() from shared_functions
-signal.signal(signal.SIGINT, quit_gracefully)
+def quit_gracefully(signum, frame):
+    print('\\n#' + '~'*8 + 'process halted' + '~'*8 + '#')
+    done = False
+    while(done==False):
+        try:
+            code = input("Code to execute: \n>> ")
+            if code != '':
+                exec(code, globals())
+                done = True
+        except:
+            print('Previous code injection failed.')
+        end = input("Keep going? (True/False) \n>> ")
+        if end != '':
+            if end == 'False' or end == '0':
+                print('trying to quit...')
+                #TODO form guaranteed unique output filename. Save hyperparameters and possibly loss curves, other data.
+                raise SystemExit
 
+signal.signal(signal.SIGINT,  quit_gracefully)
+signal.signal(signal.SIGTERM, quit_gracefully)
 
 #read in all data
 tm.read_in_data()
@@ -47,43 +64,43 @@ tm.read_in_data()
 
 
 #===========model definition==========#
-with tf.device(tm.device):
-    #---placeholders---#
-    model_input = tf.placeholder(tf.float32, [tm.num_unrollings, tm.seg_len], name='input_ph')
-    label       = tf.placeholder(tf.float32, [tm.label_shape[0], tm.label_shape[1]], name='label_ph')
 
-    #---LSTM initialization---#
+#---placeholders---#
+model_input = tf.placeholder(tf.float32, [tm.num_unrollings, tm.seg_len], name='input_ph')
+label       = tf.placeholder(tf.float32, [tm.label_shape[0], tm.label_shape[1]], name='label_ph')
 
-    lstm_cell     = tf.contrib.rnn.LSTMCell(tm.seg_len)
+#---LSTM initialization---#
 
-    if tm.regularization != False:
-        lstm_reg      = tf.contrib.layers.l2_regularizer(tm.reg_amount, scope=None)
-        lstm_cell.activity_regularizer = lstm_reg
-    if tm.use_residual == True:
-        lstm_cell     = tf.contrib.rnn.ResidualWrapper(lstm_cell)
-    if tm.use_dropout  == True:
-        lstm_cell     = tf.contrib.rnn.DropoutWrapper(lstm_cell, input_keep_prob=tm.input_dropout, output_keep_prob=tm.output_dropout)
+lstm_cell     = tf.contrib.rnn.LSTMCell(tm.seg_len)
 
-    lstm_cell     = tf.contrib.rnn.MultiRNNCell([lstm_cell]* tm.num_layers)
-    cur_state     = lstm_cell.zero_state(tm.num_unrollings, tf.float32)
-    state_ph      = tf.placeholder(tf.float32, [tm.num_layers, 2, tm.num_unrollings, tm.seg_len])
-    state_unpack  = tf.unstack(state_ph, axis=0)
-    state_tuple   = tuple([tf.contrib.rnn.LSTMStateTuple(state_unpack[i][0], state_unpack[i][1]) for i in range(tm.num_layers)])
-    logits, state = lstm_cell(model_input, state_tuple)
+if tm.regularization != False:
+    lstm_reg      = tf.contrib.layers.l2_regularizer(tm.reg_amount, scope=None)
+    lstm_cell.activity_regularizer = lstm_reg
+if tm.use_residual == True:
+    lstm_cell     = tf.contrib.rnn.ResidualWrapper(lstm_cell)
+if tm.use_dropout  == True:
+    lstm_cell     = tf.contrib.rnn.DropoutWrapper(lstm_cell, input_keep_prob=tm.input_dropout, output_keep_prob=tm.output_dropout)
 
-    if tm.use_transpose == True:
-        layer     = tf.layers.dense(inputs=logits, units=1, kernel_initializer=tf.truncated_normal_initializer(mean=0.0, stddev=tm.weight_stddev))
-        output    = tf.layers.dense(inputs=tf.transpose(layer), units=1, kernel_initializer=tf.truncated_normal_initializer(mean=0.0, stddev=tm.weight_stddev))
-    else:
-        output       = tf.layers.dense(inputs=logits, units=tm.output_shape[1], kernel_initializer=tf.truncated_normal_initializer(mean=0.0, stddev=tm.weight_stddev))
+lstm_cell     = tf.contrib.rnn.MultiRNNCell([lstm_cell]* tm.num_layers)
+cur_state     = lstm_cell.zero_state(tm.num_unrollings, tf.float32)
+state_ph      = tf.placeholder(tf.float32, [tm.num_layers, 2, tm.num_unrollings, tm.seg_len])
+state_unpack  = tf.unstack(state_ph, axis=0)
+state_tuple   = tuple([tf.contrib.rnn.LSTMStateTuple(state_unpack[i][0], state_unpack[i][1]) for i in range(tm.num_layers)])
+logits, state = lstm_cell(model_input, state_tuple)
 
-
-    #---loss and optimizer---#
-    loss         = tf.losses.mean_squared_error(label, output)
-    optim        = tf.train.AdamOptimizer(learning_rate=tm.lr).minimize(loss)
+if tm.use_transpose == True:
+    layer     = tf.layers.dense(inputs=logits, units=1, kernel_initializer=tf.truncated_normal_initializer(mean=0.0, stddev=tm.weight_stddev))
+    output    = tf.layers.dense(inputs=tf.transpose(layer), units=1, kernel_initializer=tf.truncated_normal_initializer(mean=0.0, stddev=tm.weight_stddev))
+else:
+    output       = tf.layers.dense(inputs=logits, units=tm.output_shape[1], kernel_initializer=tf.truncated_normal_initializer(mean=0.0, stddev=tm.weight_stddev))
 
 
-    # saver        = tf.train.Saver()
+#---loss and optimizer---#
+loss         = tf.losses.mean_squared_error(label, output)
+optim        = tf.train.AdamOptimizer(learning_rate=tm.lr).minimize(loss)
+
+
+# saver        = tf.train.Saver()
 
 
 #===========run training==========#

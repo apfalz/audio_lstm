@@ -1,4 +1,3 @@
-from __future__ import print_function
 import sys
 import numpy             as np
 import matplotlib.pyplot as plt
@@ -13,12 +12,12 @@ quit_gracefully = """
 def quit_gracefully(signum, frame):
     print('\\n#' + '~'*8 + 'process halted' + '~'*8 + '#')
     try:
-        code = raw_input("Code to execute: \\n>> ")
+        code = input("Code to execute: \\n>> ")
         if code != '':
             exec(code, globals())
     except:
         print('Previous code injection failed.')
-        code = raw_input("Code to execute: \\n>> ")
+        code = input("Code to execute: \\n>> ")
         if code != '':
              exec(code in globals(), globals())
     end = input("Keep going? (True/False) \\n>> ")
@@ -881,7 +880,7 @@ class Training_Manager:
         self.output_dropout = 1.0
         self.noisify        = False
         self.sampling_rate  = sampling_rate
-        
+
         #data shapes
         self.seg_len        = seg_len
         self.num_unrollings = num_unrollings
@@ -937,7 +936,7 @@ class Training_Manager:
         #remove unwanted items from output dict
         for _ in params_to_omit:
             temp = output.pop(_)
- 
+
         fn = self.base_name + self.comment + '.py'
 
         with open(fn, 'w') as f:
@@ -1043,7 +1042,7 @@ class Training_Manager:
         shortest               = np.argmin(dataset_lengths)
         if self.use_fft == False:
             len_matrix             = self.seg_len + (self.int_cursor_inc * (self.num_unrollings - 1))
-            self.num_iters         = (len(self.input_data[shortest]) - len_matrix) / self.ext_cursor_inc
+            self.num_iters         = int((len(self.input_data[shortest]) - len_matrix) / self.ext_cursor_inc)
         else:
             self.num_iters         =  len(self.input_data[shortest]) - (self.num_unrollings + 1)
         if self.verbose >= 1:
@@ -1064,7 +1063,7 @@ class Training_Manager:
             #return train, label
         else:
             train = []
-            for i in xrange(self.num_unrollings):
+            for i in range(self.num_unrollings):
                 start = self.train_cursor+(i*self.int_cursor_inc)
                 end   = start +self.seg_len
                 train.append(source[start:end])
@@ -1073,7 +1072,7 @@ class Training_Manager:
                 train = np.array(train) + noise
 
             label = []
-            for j in xrange(self.label_shape[0]):
+            for j in range(self.label_shape[0]):
                 start = self.train_cursor + self.label_offset + (j*self.int_cursor_inc)
                 end   = start + self.label_shape[1]
                 label.append(source[start:end])
@@ -1113,7 +1112,7 @@ class Training_Manager:
                 start = np.random.randint(self.num_iters)
                 if len(self.seed_list[self.seed_cursor][start:]) >= self.num_unrollings+1:
                     done = True
-                
+
         end   = start + (self.num_unrollings*self.seg_len)
 
         if self.verbose == 2:
