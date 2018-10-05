@@ -24,4 +24,5 @@ data = {'lr'       : 1e-4,
 'device'           : 'cpu:0',
 'base_name'        : 'samplewise_guitar',
 'input_names'      : ['training'],
-'input_fn_list'    : ['model_inputs/limited_guitar.wav']}
+'input_fn_list'    : ['model_inputs/limited_guitar.wav'],
+'device'           : '/gpu:0'}
