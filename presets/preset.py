@@ -21,7 +21,7 @@ data = {'lr'       : 1e-4,
 'input_keep_prob'  : 0.5,
 'output_keep_prob' : 0.5,
 'seed_advance'     : ['random'],
-'base_name'        : 'more_both_dropout',
+'base_name'        : 'two_output_layers',
 'input_names'      : ['training'],
 'input_fn_list'    : ['model_inputs/limited_guitar.wav'],
 'device'           : '/gpu:0'}
