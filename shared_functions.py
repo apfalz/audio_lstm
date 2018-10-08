@@ -1126,6 +1126,10 @@ class Training_Manager:
         self.advance_cursor %= len(self.seed_advance)
         self.seed_cursor    += 1
         self.seed_cursor    %= len(self.seed_list)
+        if self.save_seeds == True:
+            fn = 'seed_' + str(self.train_cursor) + .'wav'
+            wav.write(fn, self.sampling_rate, np.hstack(np.array(output)))
+            print('saved ' + fn)
 
         return output, mode
 
