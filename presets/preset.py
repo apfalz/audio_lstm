@@ -1,5 +1,5 @@
 data = {'lr'       : 1e-4,
-'dream_length'     : 11025 * 10,
+'dream_length'     : 44100 * 10,
 'num_layers'       : 1,
 'use_residual'     : False,
 'num_unrollings'   : 100,
