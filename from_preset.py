@@ -34,7 +34,7 @@ for _ in tm.__dict__:
     print(_ + ' : ' + str(tm.__dict__[_]))
 
 def test_dream():
-    wav.write('test.wav', 11025, np.hstack(np.array(dream)))
+    wav.write('test.wav', 44100, np.hstack(np.array(dream)))
     print('saved dream as test.wav')
 
 
