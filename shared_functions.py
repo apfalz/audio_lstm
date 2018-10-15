@@ -1123,8 +1123,7 @@ class Training_Manager:
         if self.use_fft == True:
             output = self.seed_list[self.seed_cursor][start:start+self.num_unrollings]
         else:
-            output = [self.seed_list[self.seed_cursor][start:], self.seed_list[self.seed_cursor][:end]]
-            output = np.hstack(output).reshape(self.num_unrollings, self.seg_len)
+            output = np.take(range(start, end), mode='wrap').reshape(self.num_unrollings, self.seg_len)
         # else:
         #     output = self.seed_list[self.seed_cursor][start:end].reshape((self.num_unrollings, self.seg_len))
         self.advance_cursor += 1
