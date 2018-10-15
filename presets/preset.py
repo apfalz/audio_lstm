@@ -25,6 +25,6 @@ data = {'lr'       : 1e-4,
 'seed_advance'     : ['random'],
 'base_name'        : 'third',
 'input_names'      : ['training'],
-'input_fn_list'    : ['model_inputs/third_11025fs.wav'],
+'input_fn_list'    : ['model_inputs/third_guitar_11025fs.wav'],
 'save_seeds'       : True,
 'device'           : '/gpu:0'}
