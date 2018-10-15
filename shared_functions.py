@@ -1093,16 +1093,17 @@ class Training_Manager:
         elif force_mode != None:
             mode = force_mode
         elif self.seed_advance[self.advance_cursor] == 'random' and self.use_fft == False:
-            if self.verbose == 2:
-                print('inside random seed choice while loop')
+            # if self.verbose == 2:
+            #     print('inside random seed choice while loop')
             mode = 'random'
-            done = False
-            while done == False:
-                start = np.random.randint(self.num_iters)
-                if self.verbose == 2:
-                    print('guess: ' + str(len(self.seed_list[self.seed_cursor][start:])) + ' must be less than target: ' + str(self.num_unrollings * self.seg_len))
-                if len(self.seed_list[self.seed_cursor][start:]) >=  self.num_unrollings*self.seg_len:
-                    done = True
+            # done = False
+            # while done == False:
+            start = np.random.randint(self.num_iters)
+                # if self.verbose == 2:
+                #     print('guess: ' + str(len(self.seed_list[self.seed_cursor][start:])) + ' must be less than target: ' + str(self.num_unrollings * self.seg_len))
+                # if len(self.seed_list[self.seed_cursor][start:]) >=  self.num_unrollings*self.seg_len:
+                #     done = True
+
         elif self.seed_advance[self.advance_cursor] == 'random' and self.use_fft == True:
             if self.verbose >= 1:
                 print ('inside random seed choice while loop')
@@ -1114,14 +1115,18 @@ class Training_Manager:
                     done = True
 
         end   = start + (self.num_unrollings*self.seg_len)
-
+        if len(self.seed_list[self.seed_cursor][start:]) < len(self.seed_list[self.seed_cursor]):
+            end = end % len(self.seed_list[self.seed_cursor])
         if self.verbose == 2:
             print('using ' + self.seed_advance[self.advance_cursor] + ' as mode to advance seed.')
             print('start: ' + str(start))
         if self.use_fft == True:
             output = self.seed_list[self.seed_cursor][start:start+self.num_unrollings]
         else:
-            output = self.seed_list[self.seed_cursor][start:end].reshape((self.num_unrollings, self.seg_len))
+            output = [self.seed_list[self.seed_cursor][start:], self.seed_list[self.seed_cursor][:end]]
+            output = np.hstack(output).reshape(self.num_unrollings, self.seg_len)
+        # else:
+        #     output = self.seed_list[self.seed_cursor][start:end].reshape((self.num_unrollings, self.seg_len))
         self.advance_cursor += 1
         self.advance_cursor %= len(self.seed_advance)
         self.seed_cursor    += 1
