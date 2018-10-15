@@ -76,17 +76,22 @@ with tf.device(tm.device):
 
     #---LSTM initialization---#
 
-    lstm_cell     = tf.contrib.rnn.LSTMCell(tm.seg_len)
+    lstms         = []
+    for i in range(tm.num_layers):
+        cell = tf.contrib.rnn.LSTMCell(tm.seg_len)
+        if tm.use_dropout  == True:
+            cell     = tf.contrib.rnn.DropoutWrapper(cell, input_keep_prob=tm.input_dropout, output_keep_prob=tm.output_dropout)
+        lstms.append(cell)
+    # 
+    #
+    # if tm.regularization != False:
+    #     lstm_reg      = tf.contrib.layers.l2_regularizer(tm.reg_amount, scope=None)
+    #     lstm_cell.activity_regularizer = lstm_reg
+    # if tm.use_residual == True:
+    #     lstm_cell     = tf.contrib.rnn.ResidualWrapper(lstm_cell)
 
-    if tm.regularization != False:
-        lstm_reg      = tf.contrib.layers.l2_regularizer(tm.reg_amount, scope=None)
-        lstm_cell.activity_regularizer = lstm_reg
-    if tm.use_residual == True:
-        lstm_cell     = tf.contrib.rnn.ResidualWrapper(lstm_cell)
-    if tm.use_dropout  == True:
-        lstm_cell     = tf.contrib.rnn.DropoutWrapper(lstm_cell, input_keep_prob=tm.input_dropout, output_keep_prob=tm.output_dropout)
 
-    lstm_cell     = tf.contrib.rnn.MultiRNNCell([lstm_cell]* tm.num_layers)
+    lstm_cell     = tf.contrib.rnn.MultiRNNCell(lstms)
     cur_state     = lstm_cell.zero_state(tm.num_unrollings, tf.float32)
     state_ph      = tf.placeholder(tf.float32, [tm.num_layers, 2, tm.num_unrollings, tm.seg_len])
     state_unpack  = tf.unstack(state_ph, axis=0)
