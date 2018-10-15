@@ -33,8 +33,8 @@ for _ in config:
 for _ in tm.__dict__:
     print(_ + ' : ' + str(tm.__dict__[_]))
 
-def test_dream():
-    wav.write('test.wav', 44100, np.hstack(np.array(dream)))
+def test_dream(fs=11025):
+    wav.write('test.wav', fs, np.hstack(np.array(dream)))
     print('saved dream as test.wav')
 
 
