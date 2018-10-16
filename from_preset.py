@@ -171,7 +171,6 @@ for epoch in range(tm.num_epochs):
         total_iters_completed += 1
 
         if tm.reset_state != False and total_iters_completed % tm.reset_state == 0:
-            print("resetting main state")
             cur_state       = np.zeros([tm.num_layers, 2, tm.num_unrollings, tm.seg_len])
 
 
