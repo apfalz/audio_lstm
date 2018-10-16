@@ -1115,8 +1115,6 @@ class Training_Manager:
                     done = True
 
         end   = start + (self.num_unrollings*self.seg_len)
-        if len(self.seed_list[self.seed_cursor][start:]) < len(self.seed_list[self.seed_cursor]):
-            end = end % len(self.seed_list[self.seed_cursor])
         if self.verbose == 2:
             print('using ' + self.seed_advance[self.advance_cursor] + ' as mode to advance seed.')
             print('start: ' + str(start))

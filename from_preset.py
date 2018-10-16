@@ -81,8 +81,10 @@ with tf.device(tm.device):
         cell = tf.contrib.rnn.LSTMCell(tm.seg_len)
         if tm.use_dropout  == True:
             cell     = tf.contrib.rnn.DropoutWrapper(cell, input_keep_prob=tm.input_dropout, output_keep_prob=tm.output_dropout)
+        if tm.use_residual == True:
+            cell     = tf.contrib.rnn.ResidualWrapper(cell)
         lstms.append(cell)
-    # 
+    #
     #
     # if tm.regularization != False:
     #     lstm_reg      = tf.contrib.layers.l2_regularizer(tm.reg_amount, scope=None)
