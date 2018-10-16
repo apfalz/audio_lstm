@@ -89,8 +89,6 @@ with tf.device(tm.device):
     # if tm.regularization != False:
     #     lstm_reg      = tf.contrib.layers.l2_regularizer(tm.reg_amount, scope=None)
     #     lstm_cell.activity_regularizer = lstm_reg
-    # if tm.use_residual == True:
-    #     lstm_cell     = tf.contrib.rnn.ResidualWrapper(lstm_cell)
 
 
     lstm_cell     = tf.contrib.rnn.MultiRNNCell(lstms)
