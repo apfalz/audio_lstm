@@ -230,6 +230,9 @@ for epoch in range(tm.num_epochs):
 
         #---concurrent_dream---#
         if tm.save_dreams == True:
+            if tm.reset_state != False and total_iters_completed % tm.reset_state == 0:
+                cur_dream_state = np.zeros([tm.num_layers, 2, tm.num_unrollings, tm.seg_len])
+
             dream_counter += 1
             cur_dream_output, cur_dream_state = sess.run(dream_ops, feed_dict={
                 model_input : seed,
