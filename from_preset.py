@@ -80,7 +80,7 @@ with tf.device(tm.device):
     for i in range(tm.num_layers):
         cell = tf.contrib.rnn.LSTMCell(tm.seg_len)
         if tm.use_dropout  == True:
-            cell     = tf.contrib.rnn.DropoutWrapper(cell, input_keep_prob=tm.input_dropout, output_keep_prob=tm.output_dropout)
+            cell     = tf.contrib.rnn.DropoutWrapper(cell, input_keep_prob=tm.input_dropout, output_keep_prob=tm.output_dropout, state_keep_prob=tm.state_keep_prob)
         if tm.use_residual == True:
             cell     = tf.contrib.rnn.ResidualWrapper(cell)
         lstms.append(cell)
