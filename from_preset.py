@@ -253,7 +253,7 @@ for epoch in range(tm.num_epochs):
                 else:
                     dream = sf.to_audio_new(dream, input_hop_size=tm.hop_size, window_size=tm.window_size, sampling_rate=tm.sampling_rate)
                     wav.write(dream_fn, tm.sampling_rate, dream)
-
+                cur_dream_state = np.zeros([tm.num_layers, 2, tm.num_unrollings, tm.seg_len])
                 print('saved ' + dream_fn)
                 dream = []
                 dream_counter = 0
