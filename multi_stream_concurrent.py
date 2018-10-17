@@ -263,7 +263,6 @@ for epoch in range(tm.num_epochs):
 
                 dreams[current].append(cur_dream_output[-1])
             if dream_counter >= tm.dream_length:
-                dreams = []
                 for d in range(num_dream_streams):
                     #reset all states
                     dream_states[d] = np.zeros([tm.num_layers, 2, tm.num_unrollings, tm.seg_len])
