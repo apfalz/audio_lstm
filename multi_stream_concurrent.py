@@ -110,7 +110,7 @@ with tf.device(tm.device):
         layer     = tf.layers.dense(inputs=logits, units=1, kernel_initializer=tf.truncated_normal_initializer(mean=0.0, stddev=tm.weight_stddev))
         output    = tf.layers.dense(inputs=tf.transpose(layer), units=1, kernel_initializer=tf.truncated_normal_initializer(mean=0.0, stddev=tm.weight_stddev))
     else:
-        output       = tf.layers.dense(inputs=logits, units=tm.output_shape[1], kernel_initializer=tf.truncated_normal_initializer(mean=0.0, stddev=tm.weight_stddev))
+        output       = tf.layers.dense(activation=tf.nn.tanh, inputs=logits, units=tm.output_shape[1], kernel_initializer=tf.truncated_normal_initializer(mean=0.0, stddev=tm.weight_stddev))
 
 
     #---loss and optimizer---#
