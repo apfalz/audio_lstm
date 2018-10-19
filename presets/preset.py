@@ -1,4 +1,4 @@
-data = {'lr'       : 1e-4,
+data = {'lr'       : 1e-5,
 'dream_length'     : 11025 * 30,
 'num_layers'       : 1,
 'use_residual'     : False,
